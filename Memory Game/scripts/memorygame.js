@@ -38,13 +38,15 @@ cardArray=[...cardArray,...cardArray];
 cardArray.sort(()=> 0.5 - Math.random());
 
 const gridDisplay = document.querySelector('#grid');
-const score = document.getElementById("result")
-const attempts = document.getElementById("attempts")
+const score = document.getElementById("result");
+const attempts = document.getElementById("attempts");
+const highscores = document.getElementById("highscore");
 let cardChosen = [];
 let cardsChosenIds=[];
-const cardsWon=[];
+var cardsWon=[];
+var highscore = 2;  //get from database.
 let totalAttempts=2;
-let attemptsLeft=10;
+var attemptsLeft=9;
 const tap = new Audio('./media/tap.wav');
 const matched = new Audio("./media/matched.wav");
 const mismatch = new Audio("./media/mismatch.wav");
@@ -72,8 +74,9 @@ function start(){
 
 
 function createBoard(){
+    cardsWon=[];
     score.innerText=0;
-    attempts.innerText=attemptsLeft;
+    attempts.innerText=9;
     for(let i=0; i<cardArray.length;i++){
         const card= document.createElement('img');
         card.setAttribute('src','images/blank.png');
@@ -94,7 +97,7 @@ function clearBoard(){
     gridDisplay.removeChild(element);
     });
     console.log(duplicatedElements);
-
+    attemptsLeft=9;
 }
 
 
@@ -126,6 +129,9 @@ function checkMatch(){
     cardChosen=[];
     cardsChosenIds=[];
     score.innerText=cardsWon.length;
+    if(cardsWon.length > highscore){
+        highscores.innerText=cardsWon.length;  //update highscore in the database.....
+    }
     attemptsLeft -=1;
     attempts.innerText=attemptsLeft;
     if(attemptsLeft>=0 && cardsWon.length==cardArray.length/2){
