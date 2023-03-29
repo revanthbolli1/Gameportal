@@ -3,7 +3,7 @@ const statusText = document.querySelector("#statusText");
 // const restartBtn = document.querySelector("#restartBtn");
 const screen1=document.getElementById("screen1");
 const screen2=document.getElementById("screen2");
-const starts=document.getElementById('start');
+const starts=document.getElementsByClassName('buttons')[0];
 const scoreBoard=document.getElementsByClassName("scoreboard")[0];
 const bgm = new Audio("./media/memorybgm.mp3");
 bgm.loop=true;
@@ -26,12 +26,10 @@ let running = false;
 function start(){
     bgm.play();
     screen1.style.left="-50vw"
-    screen2.style.left="100vw";
+    screen2.style.left="150vw";
     starts.style.display="none";
-
     scoreBoard.style.left="0";
     scoreBoard.style.top="10%";
-    // createBoard();
     initializeGame();
 }
 
@@ -39,21 +37,46 @@ function start(){
 function initializeGame(){
     restartGame();
     cells.forEach(cell => cell.addEventListener("click", cellClicked));
-    // restartBtn.addEventListener("click", restartGame);
     statusText.textContent = `${currentPlayer}'s turn`;
     running = true;
 }
-function cellClicked(){
+
+
+function cellClicked() {
+  tap.play();
+  const cellIndex = this.getAttribute("cellIndex");
+
+  if (options[cellIndex] != "" || !running || currentPlayer === "O") {
+    return;
+  }
+
+  updateCell(this, cellIndex);
+  checkWinner();
+  currentPlayer = "O"; // switch to the next player after X's turn
+  if(running===true){
+  // Computer (O) plays
+  setTimeout(() => {
+    const emptyCells = [];
+    options.forEach((cell, index) => {
+      if (cell === "") {
+        emptyCells.push(index);
+      }
+    });
+    const randomIndex = Math.floor(Math.random() * emptyCells.length);
+    const computerCellIndex = emptyCells[randomIndex];
+    const computerCell = cells[computerCellIndex];
     tap.play();
-    const cellIndex = this.getAttribute("cellIndex");
-
-    if(options[cellIndex] != "" || !running){
-        return;
-    }
-
-    updateCell(this, cellIndex);
+    updateCell(computerCell, computerCellIndex);
     checkWinner();
-}
+    currentPlayer = "X"; // switch back to X's turn after O's turn
+  }, 1000);
+}}
+
+
+
+  
+
+
 function updateCell(cell, index){
     options[index] = currentPlayer;
     cell.textContent = currentPlayer;
@@ -81,16 +104,28 @@ function checkWinner(){
     }
 
     if(roundWon){
-        statusText.textContent = `${currentPlayer} wins!`;
+        if(currentPlayer==="X"){
+            currentPlayer="You";
+            statusText.textContent = `${currentPlayer} won!`;
+        }
+        else{
+            statusText.textContent = `You Lose!`;
+        }
+        
         running = false;
         scoreBoard.style.zIndex="1";
-        screen1.style.left="0vw"
+        screen1.style.left="0vw";
         screen2.style.left="50vw";
-        starts.style.display="block";
+        setTimeout(()=>starts.style.display="flex",900);
         scoreBoard.style.left="40%";
         scoreBoard.style.top="40%";
         bgm.pause();
         congrats.play();
+        if (currentPlayer === "X") {
+            options = options.map(option => option === "" ? "X" : option);
+        } else {
+            options = options.map(option => option === "" ? option : "O");
+        }
     }
     else if(!options.includes("")){
         statusText.textContent = `Draw!`;
@@ -98,7 +133,7 @@ function checkWinner(){
         scoreBoard.style.zIndex="1";
         screen1.style.left="0vw"
         screen2.style.left="50vw";
-        starts.style.display="block";
+        setTimeout(()=>starts.style.display="flex",900);
         scoreBoard.style.left="40%";
         scoreBoard.style.top="40%";
         bgm.pause();
@@ -117,6 +152,16 @@ function restartGame(){
 }
 
 
+function toggleDropdown() {
+    dropdown = document.getElementById("myDropdown");
+    arrow = document.getElementById("arrow-up");
 
-
-
+    if(dropdown.style.display=="block"){
+        dropdown.style.display="none";
+        arrow.style.display="none";
+    }
+    else{
+        dropdown.style.display="block";
+        arrow.style.display="block";
+}
+}
