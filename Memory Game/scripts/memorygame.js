@@ -56,7 +56,7 @@ const congrats=new Audio("./media/congrats.wav");
 const gameover=new Audio("./media/gameover.wav");
 const screen1=document.getElementById("screen1");
 const screen2=document.getElementById("screen2");
-const starts=document.getElementById('start');
+const starts=document.getElementsByClassName('buttons')[0];
 const scoreBoard=document.getElementsByClassName("scoreboard")[0];
 function start(){
     bgm.play();
@@ -138,6 +138,9 @@ function checkMatch(){
         // console.log("Yay, You are Einstein!");
         bgm.pause();
         congrats.play();
+        screen1.style.left="0vw"
+        screen2.style.left="50vw";
+        starts.style.display="flex";
     }
     else if(attemptsLeft==0){
         // console.log("Game Over!");
@@ -145,7 +148,7 @@ function checkMatch(){
         gameover.play();
         screen1.style.left="0vw"
         screen2.style.left="50vw";
-        starts.style.display="block";
+        starts.style.display="flex";
         setTimeout(()=>gridDisplay.style.zIndex="-1",500);
         scoreBoard.style.zIndex="1";
         setTimeout(()=>
@@ -187,11 +190,3 @@ function toggleDropdown() {
         arrow.style.display="block";
 }
 }
-
-
-
-
-
-
-
-
