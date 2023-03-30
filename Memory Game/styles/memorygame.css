@@ -100,7 +100,7 @@ h3{
     height:100%
 }
 
-#start{
+/* #start{
     background-color: green;
     color:white;
     position:absolute;
@@ -112,12 +112,37 @@ h3{
     border: 2px solid white; 
     cursor: pointer;
     transition: 0.5s ease;
+} */
+
+.buttons{
+    position: absolute;
+    top:60%;
+    left:45.6%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    row-gap: 10px;
+    width:140px;
+    height:120px;
 }
+
+#start,#exit{
+    text-decoration: none;
+    background-color: green;
+    color:white;
+    padding:10px 40px;
+    border-radius:8px;
+    border: 2px solid white; 
+    cursor: pointer;
+    transition: 0.5s;
+    font-size: 14px;
+}
+
+#exit{ 
+    background-color: rgb(160, 16, 16);
+} 
 
 #start:hover{
     background-color: #32CD32;
 }
-
-
-
-
