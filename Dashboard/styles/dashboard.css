@@ -30,8 +30,8 @@ table {
     top:52%;
     left:50%;
     transform:translate(-50%,-50%);
-    background-color: #242424;
-    border: none;
+    background-color:rgba(0, 0, 0, 0.436);
+    border: 1px solid rgba(255, 255, 255, 0.63);
     border-collapse: separate;
     border-spacing: 0;
     box-shadow: 0 2px 2px rgba(0,0,0,0.5);
@@ -43,7 +43,7 @@ table {
 }
 
 table thead {
-    background-color: #3c3c3c;
+    background-color: #063d48;
     border: none;
     color: #1aec0b;
     font-weight: bold;
@@ -56,6 +56,7 @@ table th, table td {
     text-align: center;
     border-radius: 40px;
 }
+
 
 table th {
     border: 2px solid #7c7c7c;
