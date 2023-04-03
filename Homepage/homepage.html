@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/index.css">
+    <link rel="stylesheet" href="./styles/nav.css">
+    <link rel="shortcut icon" href="./images/title.png" type="image/icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-CJ8DjKX9vijLLt3eBt2Gd+EgOdTtCvz0ZsRgiZPb8+vx9XZvAaOJ7x+c0TR8Ww7LOjvJr/aEL7CC91+nwn/VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://kit.fontawesome.com/9bb6241c8c.js" defer crossorigin="anonymous"></script>
+    <title>Gamezone</title>
+</head>
+<body>
+    <div id="navbar">
+        <nav>
+            <i class="fa-solid fa-gamepad"></i>
+            <h2>Gamezone</h2>
+            <div class="dropdown">
+                <img class="profile-icon" src="./images/profile.png" onclick="toggleDropdown()">
+                <div class="arrow" id="arrow-up"></div>
+                <div class="dropdown-content" id="myDropdown">
+                  <a href="#">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="blur"></div>
+
+
+    <div class="subnav">
+        <a href="./homepage.html" class="active">Games</a>
+        <a href="./dashboard.html">Dashboard</a>
+    </div>
+
+    <div class="subnav1">
+        <a href="#puzzle" class="category-link">Puzzle</a>
+        <a href="#adventure" class="category-link">Adventure</a>
+        <a href="#racing" class="category-link">Racing</a>
+        <a href="#action" class="category-link">Action</a>
+        <a href="#survival" class="category-link">Survival</a>
+    </div>
+
+    <div class="container">
+        <!--Area of the images-->
+           <div class="wrapper">
+              <img src="./images/memorythumbnail.avif">
+              <img src="./images/ticthumbnail.jpeg">
+           </div>
+    </div>
+
+    <div class="item-container" id="puzzle">
+        <div class="card">
+            <img src="./images/puzzle.png" alt="">
+        </div>
+        <div class="card">
+            <img src="./images/memorythumbnail.avif" style="width:100%">
+            <div class="containers">
+              <h4><b>MEMORY-GAME</b></h4>
+              <a href="./memorygame.html">PLAY</a>
+            </div>
+        </div>
+        <div class="card">
+            <img src="./images/ticthumbnail.jpeg" style="width:100%">
+            <div class="containers">
+              <h4><b>TIC-TAC-TOE</b></h4>
+              <a href="./tictactoe.html">PLAY</a>
+            </div>
+        </div>
+    </div>
+    <div class="item-container" id="adventure">
+        <div class="card">
+            <img src="./images/adventure.png" alt="">
+        </div>
+    </div>
+    <div class="item-container" id="racing">
+        <div class="card">
+            <img src="./images/racing.png" alt="">
+        </div>
+    </div>
+    <div class="item-container" id="action">
+        <div class="card">
+            <img src="./images/action.png" alt="">
+        </div>
+    </div>
+    <div class="item-container" id="survival">
+        <div class="card">
+            <img src="./images/survival.png" alt="">
+        </div>
+    </div>
+
+    <script>
+        const links = document.querySelectorAll('.category-link');
+
+        links.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            links.forEach(link => link.classList.remove('active'));
+            link.classList.add('active');
+            const target = document.querySelector(link.hash);
+            const topMargin = window.innerHeight * 0.24;
+            const top = target.getBoundingClientRect().top + window.pageYOffset - topMargin;
+            window.scrollTo({top, behavior: 'smooth'});
+        });
+        });
+
+
+        function toggleDropdown() {
+           dropdown = document.getElementById("myDropdown");
+           arrow = document.getElementById("arrow-up");
+
+           if(dropdown.style.display=="block"){
+                dropdown.style.display="none";
+                arrow.style.display="none";
+           }
+           else{
+                dropdown.style.display="block";
+                arrow.style.display="block";
+           }
+        }
+
+    </script>
+</body>
+</html>
