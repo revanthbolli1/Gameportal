@@ -42,11 +42,10 @@
         <a href="#survival" class="category-link">Survival</a>
     </div>
 
-    <div class="container">
-        <!--Area of the images-->
+    <div class="slideshow">
            <div class="wrapper">
-              <img src="./images/memorythumbnail.avif">
-              <img src="./images/ticthumbnail.jpeg">
+                <a id="slide" href="./memorygame.html"><img src="./images/memorythumbnail.avif"></a>
+                <a id="slide" href="./tictactoe.html"><img src="./images/ticthumbnail.jpeg"></a>
            </div>
     </div>
 
@@ -92,7 +91,6 @@
 
     <script>
         const links = document.querySelectorAll('.category-link');
-
         links.forEach(link => {
         link.addEventListener('click', (event) => {
             event.preventDefault();
