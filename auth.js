@@ -4,13 +4,12 @@ const express = require("express");
 const router = express.Router();
 const cookieParser = require("cookie-parser");
 router.use(cookieParser());
-//const {value}=require('./tokenFunc');
+
 
 // Create a function to generate a JWT token
 function createToken(user) {
   const token = jwt.sign(
     {
-      // playername: user.playername,
       email: user.email,
     },
     process.env.JWT_SECRET,
@@ -18,7 +17,6 @@ function createToken(user) {
       expiresIn: "48h",
     }
   );
-  //console.log('before'+token);
   return token;
 }
 
