@@ -5,9 +5,13 @@ const session = require('express-session');
 // const bcrypt= require('bcryptjs')
 const path= require('path')
 require('dotenv').config()
+const {checkingToken}=require('./auth');
+const cookieParser=require('cookie-parser');
+const {value,token1}=require('./tokenFunc');   
 
 //to start express
 const app= express()
+app.use(cookieParser());
 
 //database connection
 const url= 'mongodb://localhost/Gamezone'
@@ -33,6 +37,17 @@ app.use(session({
 //to get styles
 app.use(express.static(__dirname + '/public'))
 
+//index-page
+const getIndex= require('./routes/get')
+app.use('/', getIndex)
+
+//registration-page
+const getRegister= require('./routes/get')
+app.use('/', getRegister)
+
+const postRegister= require('./routes/post')
+app.use('/', postRegister)
+
 
 //login page
 const getLogin= require('./routes/get')
@@ -48,6 +63,22 @@ app.use('/', frgt_pwd)
 
 const post_frgt_pwd= require('./routes/post')
 app.use('/',post_frgt_pwd)
+
+
+
+//dashboard
+const get_dashb= require('./routes/get')
+app.use('/', get_dashb)
+
+const post_dashb= require('./routes/post')
+app.use('/', post_dashb)
+
+//memorygame
+const get_memgame= require('./routes/get')
+app.use('/', get_memgame)
+
+const post_memgame= require('./routes/post')
+app.use('/', post_memgame)
 
 
 //get routes for reading data from database
