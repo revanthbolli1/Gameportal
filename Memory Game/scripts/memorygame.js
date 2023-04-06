@@ -58,11 +58,10 @@ const screen1=document.getElementById("screen1");
 const screen2=document.getElementById("screen2");
 const starts=document.getElementsByClassName('buttons')[0];
 const scoreBoard=document.getElementsByClassName("scoreboard")[0];
+const instructions = document.getElementsByClassName("instructions")[0];
+
 function start(){
     bgm.play();
-    // score.innerText=0;
-    // attempts.innerText=attemptsLeft;
-    
     screen1.style.left="-50vw"
     screen2.style.left="100vw";
     starts.style.display="none";
@@ -70,6 +69,7 @@ function start(){
     scoreBoard.style.left="0";
     scoreBoard.style.top="10%";
     createBoard();
+    instructions.style.display="none";
 }
 
 
@@ -96,7 +96,6 @@ function clearBoard(){
     duplicatedElements.forEach((element) => {
     gridDisplay.removeChild(element);
     });
-    console.log(duplicatedElements);
     attemptsLeft=9;
 }
 
@@ -135,12 +134,21 @@ function checkMatch(){
     attemptsLeft -=1;
     attempts.innerText=attemptsLeft;
     if(attemptsLeft>=0 && cardsWon.length==cardArray.length/2){
-        // console.log("Yay, You are Einstein!");
+        score.innerText = "Yay, You are Einstein!";
         bgm.pause();
         congrats.play();
         screen1.style.left="0vw"
         screen2.style.left="50vw";
         starts.style.display="flex";
+        setTimeout(()=>gridDisplay.style.zIndex="-1",500);
+        scoreBoard.style.zIndex="1";
+        setTimeout(()=>
+        {
+            scoreBoard.style.left="40%";
+            scoreBoard.style.top="21%";
+        },500);
+        instructions.style.display="block";
+        clearBoard();
     }
     else if(attemptsLeft==0){
         // console.log("Game Over!");
@@ -154,8 +162,9 @@ function checkMatch(){
         setTimeout(()=>
         {
             scoreBoard.style.left="40%";
-            scoreBoard.style.top="40%";
+            scoreBoard.style.top="21%";
         },500);
+        instructions.style.display="block";
         clearBoard();
         /*send data to the database*/
     }
@@ -174,7 +183,6 @@ function flipCard(){
         setTimeout(checkMatch,500);
     }
 }
-
 
 
 function toggleDropdown() {
