@@ -7,7 +7,7 @@ buttons.forEach((button)=>{
 
 
 function showModal(){
-    const gname= this.parentElement.parentElement.firstElementChild;
+    const gname= this.parentElement.parentElement.firstElementChild.innertext;
     const game={
         name:gname
     };
