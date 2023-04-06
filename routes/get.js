@@ -1,75 +1,167 @@
-const express= require('express')
-const router= express.Router()
+const express=require('express');
 const jwt= require('jsonwebtoken')
-const User= require('../models/schema')
+const mongoose=require('mongoose');
+const nodemailer=require('nodemailer');
+const db=mongoose.connection;
+const router=express.Router();
+
+const User=require('../api/models/registerSchema');
+const UGame=require('../api/models/userGameschema');
+const game= require('../api/models/game_schema');
+
+const {checkingToken}=require('../auth');
+const cookieParser=require('cookie-parser');
+router.use(cookieParser());
+const session=require('session');
+
 
 //create jwt secret --- hardcoding jwt secret here insted of creating .env file
-const JWT_SECRET = 'some super secret..'
-
-
+//const JWT_SECRET = 'some super secret..'
 
 //get request for getting all the data stored in db
-router.get('/abc',async(req,res)=>
-{
-    try{
-        const routes= await User.find()
-        res.json(routes)
-    }
-    catch(err)
-    {
-        res.send('Error', +err)
-    }
+router.get('/users',checkingToken,async(req,res)=>{
+  try{
+    const routes= await User.find()
+    res.json(routes);
+  }
+  catch(err){
+    res.send("Error"+err);
+  }
 })
+
+//gamedetails
+router.get('/gamedetails',checkingToken, async(req,res)=>{
+
+  try {
+    const data = await game.find().lean();
+    return res.json({ msg: data });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
+
+//index
+router.get('/',(req,res)=>{
+  res.render('index');
+})
+
+//setup route to register page
+router.get("/register", (req, res) => {
+  res.render("register"); //call register page
+});
+
 
 //setup route to login page
 router.get('/login', (req, res) => {
-    res.render('login'); //call login page
-  });
+  res.cookie('token', '', { maxAge: 0 });
+  res.cookie('user', '', { maxAge: 0 });  
+  res.render('login'); //call login page
+});
 
-router.get('/dashboard', (req, res) => {
-    if (req.session.user) {
-      res.render('dashboard', { email: req.session.user.email });
-    } else {
-      res.redirect('/');
+     
+
+// forgot-password
+router.get('/forgot-password', (req, res, next) => {
+  res.render('forgot-password');
+});
+
+
+//reset-password
+router.get("/reset-password/:id/:token", async (req, res, next) => {
+  try {
+    const { id, token } = req.params;
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const email = payload.email;
+    const user = await User.findOne({ _id: id, email: email });
+    if (!user) {
+      return res.render({ msg: "Invalid reset link" });
     }
-  });
+    const now = Math.floor(Date.now() / 1000); // get current time in seconds
+    if (payload.exp && now > payload.exp) {
+      return res.render('forgot-password',{ msg: "Reset link has expired" });
+    }
 
-
-  //forgot password form
-router.get('/forgot-password', (req,res, next)=>
-{
-  res.render('forgot-password')
-})
-
-//reset password
-router.get('/reset-password/:id/:token',(req, res, next)=>
-{
-  const {id, token}= req.params
-  let User= {
-    id: req.params.id,
-    email: req.body.email,
-    password: req.body.password
+    // render the reset password form
+    return res.render("reset-password", {
+      id: id,
+      token: token,
+    });
+  } 
+  catch (err) {
+    if (err.name === 'TokenExpiredError') {
+      return res.render('forgot-password',{ msg: "Reset link has expired" });
+    }
+    console.log(err);
+    return res.status(500).json({ message: "Internal server error" });
   }
-  
-  //check if this id exists in db
-  if(id !== User.id)
-  {
-    res.send('Invalid id..')
-    return
-  }
+});
 
-  //we have a valid id and we have a valid user with this id
-  const secret= JWT_SECRET + User.password
-  try{
-    const payload= jwt.verify(token, secret)
-    res.render('reset-password', {email: User.email})
 
-  }
-  catch(err)
-  {
-    console.log(err.message)
-    res.send(err.message)
-  }
+//memorygame
+router.get("/memorygame", (req, res) => {
+  res.render("memorygame");
+});
 
-})
-module.exports= router
+// tictactoe
+router.get('/tictactoe', checkingToken,async (req, res) => {
+  res.render('tictactoe');
+
+});
+
+//dashboard
+router.get("/dashboard", checkingToken, async (req, res) => {
+  try {
+    console.log("yeah");
+    let user = req.cookies.user;
+    let userid = user._id;
+    let gameid;
+
+    //dashboard for memorygame
+    let gamedata = await game.findOne({ GameName: "memorygame" });
+    gameid = gamedata._id;
+    console.log(gameid);
+    let highScoreData = await UGame.find({ UserId: userid, GameId: gameid })
+      .sort({ Score: -1 })
+      .limit(1)
+      .exec();
+    console.log(highScoreData);
+    let highScore = highScoreData.length > 0 ? highScoreData[0].Score : 0;
+    console.log(highScore);
+
+    //dashboard for tictactoe game
+    let gamedata1 = await game.findOne({ GameName: "tictactoe" });
+    //console.log(gamedata);
+    gameid = gamedata1._id;
+    console.log(gameid);
+
+    let gamesPlayed = await UGame.find({
+      UserId: userid,
+      GameId: gameid,
+    }).exec();
+    let playlen = gamesPlayed.length;
+    let gamesWon = await UGame.find({
+      UserId: userid,
+      GameId: gameid,
+      Status: "W",
+    }).exec();
+    let wonlen = gamesWon.length;
+
+    console.log("played" + playlen);
+
+    console.log("won" + wonlen);
+    const winratio = wonlen / playlen;
+    let value = ` ${wonlen}/${playlen}`;
+    const obj = { msg: highScore, msg1: value };
+
+    return res.render("dashboard", obj); 
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+   
+
+module.exports=router;
