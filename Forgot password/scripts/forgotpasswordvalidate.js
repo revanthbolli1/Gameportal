@@ -1,27 +1,32 @@
 const emailInput = document.getElementById("email");
 const emailError = document.getElementById("email-error");
-const form = document.querySelector("form");
+const resetButton = document.querySelector('input[type="submit"]');
+const successMessage = document.getElementById("success-message");
 
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const email = emailInput.value;
-  if (!isValidEmail(email)) {
-    emailInput.classList.add("error");
-    emailError.textContent = "Please enter a valid email address.";
-    return;
+emailInput.addEventListener("input", function () {
+  if (emailInput.validity.valid) {
+    emailError.textContent = "";
+    emailError.className = "error-message";
+    resetButton.disabled = false;
+  } else {
+    showError();
+    resetButton.disabled = true;
   }
-  form.submit();
 });
 
-function isValidEmail(email) {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(email);
+function showError() {
+  if (emailInput.validity.valueMissing) {
+    emailError.textContent = "Please enter an email address";
+  } else if (emailInput.validity.typeMismatch) {
+    emailError.textContent = "Please enter a valid email address";
+  }
+  emailError.className = "error-message active";
 }
 
-emailInput.addEventListener("input", () => {
-  if (emailInput.classList.contains("error")) {
-    emailInput.classList.remove("error");
-    emailError.textContent = "";
-  }
+resetButton.addEventListener("click", function (event) {
+  event.preventDefault();
+  successMessage.textContent = "A reset password link has been sent to your registered mail!";
+  emailInput.remove();
+  resetButton.remove();
+  document.querySelector('label[for="email"]').remove();
 });
-
