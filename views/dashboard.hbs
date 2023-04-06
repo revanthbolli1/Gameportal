@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-CJ8DjKX9vijLLt3eBt2Gd+EgOdTtCvz0ZsRgiZPb8+vx9XZvAaOJ7x+c0TR8Ww7LOjvJr/aEL7CC91+nwn/VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://kit.fontawesome.com/9bb6241c8c.js" defer crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./styles/navdash.css">
+    <link rel="stylesheet" href="./styles/dashboard.css">
+    <script src="./scripts/toggle.js" defer></script>
+    <script src="./scripts/dashboard.js" defer></script>
+</head>
+<body>
+    <div id="navbar">
+        <nav>
+            <i class="fa-solid fa-gamepad"></i>
+            <h2>Gamezone</h2>
+            <div class="dropdown">
+                <img class="profile-icon" src="./images/profile.png" onclick="toggleDropdown()">
+                <div class="arrow" id="arrow-up"></div>
+                <div class="dropdown-content" id="myDropdown">
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- <div class="blur"></div> -->
+
+
+    <div class="subnav">
+        <a href="./homepage">Games</a>
+        <a href="./dashboard" class="active">Dashboard</a>
+    </div>
+
+
+	<table id="games">
+		<thead>
+			<tr>
+				<th>Game</th>
+				<th>Stats</th>
+                <th>Records</th>
+			</tr>
+		</thead>
+		<tbody>
+          
+            <tr>
+                   
+                <td class="td1">Memory game</td>
+                <td class="td2">High Score: {{msg}}</td>                                            <!--Render all the game names and highscores here using hbs-->
+                <td class="td3">
+                    <button class="viewbutton">View</button>
+                </td>           
+            </tr>    
+            
+            <tr>
+                <td class="td1">Tic-tac-toe</td>
+                <td class="td2">Games Won: {{msg1}}</td>                                             <!--Render all the game names and highscores here using hbs-->
+                <td class="td3">
+                    <button class="viewbutton">View</button>
+                </td>           
+            </tr>                                                                    
+        </tbody>
+	</table>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h1 class="table-heading">Game Name</h1>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th> PLAYED_AT</th>
+                        <th>SCORE/STATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each gameviewdata}}
+            <tr>
+                <td>{{this.PlayedAt}}</this></td>
+                <td>{{this.Score}}</td>
+                
+            </tr>
+            {{/each}}
+
+            {{#each tictacviewdata}}
+            <tr>
+                <td>{{this.PlayedAt}}</this></td>
+                <td>{{this.Status}}</td>
+                
+            </tr>
+            {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    
+
+</body>
+</html>

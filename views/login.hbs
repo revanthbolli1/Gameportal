@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="/styles/nav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-CJ8DjKX9vijLLt3eBt2Gd+EgOdTtCvz0ZsRgiZPb8+vx9XZvAaOJ7x+c0TR8Ww7LOjvJr/aEL7CC91+nwn/VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://kit.fontawesome.com/9bb6241c8c.js" defer crossorigin="anonymous"></script>
+    <script src="/scripts/validateLogin.js" defer></script>
+    
 </head>
 <body>
     <div id="navbar">
@@ -25,11 +27,18 @@
     <section>
         <div class="login">
             <h2>LOGIN</h2>
-            <form action="/">
-                <input class="input" type="text" placeholder="Email" name="email">
-                <input class="input" type="password" placeholder="Password" name="password">
-                <a href="./forgot-password.html">Forgot password?</a>
+            <form action="/login" method="POST">
+            <div class="control">
+                <input class="input" type="text" placeholder="Email*" name="email">
+                <span class="error"></span>
+                </div>
+                <div>
+                <input class="input" type="password" placeholder="Password*" name="password">
+                <span class="error"> </span>
+                </div>
+                <a href="./forgot-password">Forgot password?</a>
                 <button type="submit">Login</button>
+                <span class="message">{{msg}}</span>
             </form>
             <p>Not a member?<a href="./register"> Signup</a></p>
         </div>

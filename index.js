@@ -1,18 +1,23 @@
 const express=require('express');
+const jwt=require('jsonwebtoken');
 const mongoose=require('mongoose');
-const path=require('path');
 const bodyParser=require('body-parser');
+const session=require('express-session');
+const path=require('path');
+require('dotenv').config();
 const postRouter=require('./routes/post');
 const getRouter=require('./routes/get');
-
-const url='mongodb://localhost/Gamezone';
+const game=require('./api/models/game_schema');
+const User=require('./api/models/registerSchema');
+const UGame=require('./api/models/userGameschema');
+const {checkingToken}=require('./auth');
+const cookieParser=require('cookie-parser');
+const {value,token1}=require('./tokenFunc');
 
 const app=express();
+app.use(cookieParser());
 
-app.use(bodyParser.json());
-
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(express.static(__dirname + '/public'));
+const url='mongodb://localhost/Gamezone';
 
 mongoose.connect(url);
 
@@ -22,23 +27,90 @@ db.on('error',()=>{
 })
 db.once('open',()=>console.log("Connected to database"));
 
-app.use(express.json());
-const gameRouter=require('./routers/routes')
-app.use('/routes',gameRouter);
 
 app.set('view engine', 'hbs')
 app.set('views', path.join(__dirname, 'views'))
 
-app.get('/',(req,res)=>{
-  res.render('login');
+
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(express.urlencoded({extended:false}));
+app.use(express.json());
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}));
+//to get styles,css,images,scripts 
+app.use(express.static(__dirname + '/public'));
+
+//login page
+const getLogin= require('./routes/get')
+app.use('/', getLogin)
+const postLogin= require('./routes/post')
+app.use('/', postLogin)
+
+//creating a new game and updating the existing game details
+const getNewGame= require('./routes/get')
+app.use('/', getNewGame)
+
+const addNewGame= require('./routes/post')
+app.use('/', addNewGame)
+
+const updateGame= require('./routes/put')
+app.use('/', updateGame)
+
+
+
+//forgot-password and reset
+const frgt_pwd= require('./routes/get')
+app.use('/', frgt_pwd)
+
+const  post_frgt_pwd= require('./routes/post')
+app.use('/',post_frgt_pwd)
+
+//dashboard
+const get_dashb= require('./routes/get')
+app.use('/', get_dashb)
+
+const post_dashb= require('./routes/post')
+app.use('/', post_dashb)
+
+app.get('/homepage',checkingToken,(req,res)=>{
+ return  res.render('homepage');
 })
+
+app.get('/logout', (req, res) => {
+  res.cookie('token', '', { maxAge: 0 });
+  res.cookie('user', '', { maxAge: 0 });
+ //res.clearCookie('cook');
+ res.redirect('/login'); // Redirect the user to the login page after logout
+
+});
+
+//memorygame
+// const get_memgame= require('./routes/get')
+// app.use('/', get_memgame)
+
+// const post_memgame= require('./routes/post')
+// app.use('/', post_memgame)
+
 
 app.get('/register',(req,res)=>{
   res.render('register');
 })
 
+
+
+app.get('/game',checkingToken,(req,res)=>{
+  res.render('memorygame');
+})
+
+
+
 app.use('/users',getRouter);
-app.use('/register',postRouter);
+
+
+
 
 app.listen(8080,()=>{
   console.log("connected to server at port 8080");

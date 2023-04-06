@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/index.css">
+    <link rel="stylesheet" href="./styles/navhome.css">
+    <link rel="shortcut icon" href="./images/title.png" type="image/icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-CJ8DjKX9vijLLt3eBt2Gd+EgOdTtCvz0ZsRgiZPb8+vx9XZvAaOJ7x+c0TR8Ww7LOjvJr/aEL7CC91+nwn/VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://kit.fontawesome.com/9bb6241c8c.js" defer crossorigin="anonymous"></script>
+    <title>Gamezone</title>
+</head>
+<body>
+    <div id="navbar">
+        <nav>
+            <i class="fa-solid fa-gamepad"></i>
+            <h2>Gamezone</h2>
+            <div class="dropdown">
+                <img class="profile-icon" src="./images/profile.png" onclick="toggleDropdown()">
+                <div class="arrow" id="arrow-up"></div>
+                <div class="dropdown-content" id="myDropdown">
+                  <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="blur"></div>
+
+
+    <div class="subnav">
+        <a href="./homepage" class="active">Games</a>
+        <a href="./dashboard">Dashboard</a>
+    </div>
+
+    <div class="subnav1">
+        <a href="#puzzle" class="category-link">Puzzle</a>
+        <a href="#adventure" class="category-link">Adventure</a>
+        <a href="#racing" class="category-link">Racing</a>
+        <a href="#action" class="category-link">Action</a>
+        <a href="#survival" class="category-link">Survival</a>
+    </div>
+
+    {{!-- <div class="slideshow">
+           
+    </div> --}}
+    <script>
+
+        const category = [
+            {
+                name:"puzzle",
+                src:"./images/puzzle.png"
+            },
+            {
+                name:"adventure",
+                src:"./images/adventure.png"
+            },
+            {
+                name:"racing",
+                src:"./images/racing.png"
+            },
+            {
+                name:"action",
+                src:"./images/action.png"
+            },
+            {
+                name:"survival",
+                src:"./images/survival.png"
+            }
+        ]
+
+        const games = [
+            {
+                name : "MEMORY GAME",
+                src : "./images/memorythumbnail.avif",
+                href : "./game",
+                category : "puzzle"
+            },
+            {
+                name : "TIC-TAC-TOE",
+                src : "./images/ticthumbnail.jpeg",
+                href : "./tictactoe",
+                category : "puzzle"
+            },
+        ]
+
+        for(let cat = 0;cat<category.length;cat++){
+            const itemcontainer = document.createElement("div");
+            itemcontainer.setAttribute("class","item-container");
+            itemcontainer.setAttribute("id",category[cat].name);
+            const tile = document.createElement("div");
+            tile.setAttribute("class","card");
+            const image = document.createElement("img");
+            image.setAttribute("src",category[cat].src);
+            tile.appendChild(image);
+            itemcontainer.appendChild(tile);
+            document.body.appendChild(itemcontainer);
+        }
+        
+        const puzzle = document.getElementById("puzzle");
+        const adventure = document.getElementById("adventure");
+        const racing = document.getElementById("racing");
+        const action = document.getElementById("action");
+        const survival = document.getElementById("survival");
+
+        for(let obj = 0; obj<games.length; obj++ ){
+            const card = document.createElement("div");
+            card.setAttribute("class", "card");
+            const img = document.createElement("img");
+            img.setAttribute("src",games[obj].src);
+            const containers = document.createElement("div");
+            containers.setAttribute("class","containers");
+            const h4 = document.createElement("h4");
+            const boldtext = document.createElement("b");
+            boldtext.innerText=games[obj].name;
+            const anchor = document.createElement("a");
+            anchor.setAttribute("href",games[obj].href);
+            anchor.innerText="PLAY";
+            h4.appendChild(boldtext);
+            containers.appendChild(h4);
+            containers.appendChild(anchor);
+            card.appendChild(img);
+            card.appendChild(containers);
+            if(games[obj].category === "puzzle"){
+                puzzle.appendChild(card);
+            }
+            else if(games[obj].category === "adventure"){
+                adventure.appendChild(card);
+            }
+            else if(games[obj].category === "action"){
+                action.appendChild(card);
+            }
+            else if(games[obj].category === "racing"){
+                racing.appendChild(card);
+            }
+            else{
+                survival.appendChild(card);
+            }
+        }
+
+        const links = document.querySelectorAll('.category-link');
+        links.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            links.forEach(link => link.classList.remove('active'));
+            link.classList.add('active');
+            const target = document.querySelector(link.hash);
+            const topMargin = window.innerHeight * 0.24;
+            const top = target.getBoundingClientRect().top + window.pageYOffset - topMargin;
+            window.scrollTo({top, behavior: 'smooth'});
+        });
+        });
+
+
+        function toggleDropdown() {
+           dropdown = document.getElementById("myDropdown");
+           arrow = document.getElementById("arrow-up");
+
+           if(dropdown.style.display=="block"){
+                dropdown.style.display="none";
+                arrow.style.display="none";
+           }
+           else{
+                dropdown.style.display="block";
+                arrow.style.display="block";
+           }
+        }
+
+    </script>
+</body>
+</html>

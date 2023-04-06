@@ -5,9 +5,13 @@
     font-family:'Poppins',san-serif;
   }
 
+  html{
+    font-size: 10px;
+  }
+
   #navbar{
     width:100%;
-    height:100vh;
+    height:8vh;
   }
 
   nav{

@@ -1,9 +1,7 @@
+const axios=require('axios');
 const form = document.querySelector('form');
-const playername = document.getElementsByClassName("input")[0];
-const email = document.getElementsByClassName("input")[1];
-const password = document.getElementsByClassName("input")[2]
-const cpassword = document.getElementsByClassName("input")[3];
-
+const email = document.getElementsByClassName("input")[0];
+const password = document.getElementsByClassName("input")[1]
 
 
 const isValidEmail = email =>{
@@ -12,7 +10,7 @@ const isValidEmail = email =>{
 }
 form.addEventListener('submit', e =>{
     e.preventDefault();
-    validate();
+    validateLogin();
 });
 
 
@@ -32,20 +30,11 @@ const successMsg = ele=>{
     control.classList.remove('error')
 }
 
-const validate= ()=>{
-    const playernameValue = playername.value.trim();
+const validateLogin= ()=>{
     const emailValue = email.value.trim();
     const passwordValue = password.value.trim();
-    const cpasswordValue = cpassword.value.trim();
     let count=0;
     
-    if (playernameValue===''){
-        errorMsg(playername, 'Playername is required');
-    }
-    else{
-        successMsg(playername);
-        count +=1;
-    }
 
     if(emailValue===""){
         errorMsg(email,"Email is required");
@@ -61,30 +50,14 @@ const validate= ()=>{
     if(passwordValue=== ""){
         errorMsg(password,"Password is required");
     }
-    else if(passwordValue.length < 8){
-        errorMsg(password,"Password must be at least 8 character.");
-    }
-    else if(passwordValue.length >16){
-        errorMsg(password,"Password must be atmost  16 character.");
-    }
     else{
         successMsg(password);
         count+=1;
     }
 
-    if(cpasswordValue=== ""){
-        errorMsg(cpassword,"Please confirm your password");
-    }
-    else if(cpasswordValue!==passwordValue){
-        errorMsg(cpassword,"Password doesn't match.");
-    }
-    else{
-        successMsg(cpassword);
-        count+=1;
-    }
-
-
-    if(count===4){
+    if(count===2){
         form.submit();
     }
 }
+
+

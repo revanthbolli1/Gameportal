@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-CJ8DjKX9vijLLt3eBt2Gd+EgOdTtCvz0ZsRgiZPb8+vx9XZvAaOJ7x+c0TR8Ww7LOjvJr/aEL7CC91+nwn/VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://kit.fontawesome.com/9bb6241c8c.js" defer crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./styles/tictactoe.css">
+    <link rel="stylesheet" href="./styles/nav_game2.css">
+</head>
+<body>
+    <div id="navbar">
+        <nav>
+            <i class="fa-solid fa-gamepad"></i>
+            <h2>Gamezone</h2>
+            <div class="dropdown">
+                <img class="profile-icon" src="./images/profile.png" onclick="toggleDropdown()">
+                <div class="arrow" id="arrow-up"></div>
+                <div class="dropdown-content" id="myDropdown">
+                    <a href="/logout" >Logout</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="scoreboard">
+        <h3>STATUS:</h3><h2 id="statusText"></h2>
+    </div>
+
+    <div id="gameContainer">
+        <h1>Tic Tac Toe</h1>
+        <div id="cellContainer">
+            <div cellIndex="0" class="cell"></div>
+            <div cellIndex="1" class="cell"></div>
+            <div cellIndex="2" class="cell"></div>
+            <div cellIndex="3" class="cell"></div>
+            <div cellIndex="4" class="cell"></div>
+            <div cellIndex="5" class="cell"></div>
+            <div cellIndex="6" class="cell"></div>
+            <div cellIndex="7" class="cell"></div>
+            <div cellIndex="8" class="cell"></div>
+        </div>
+        
+        <!-- <button id="restartBtn">Restart</button> -->
+    </div>
+
+    <div id="screen1">
+        <img src="./images/leftscreen.jpg" alt="">
+    </div>
+    <div id="screen2">
+        <img src="./images/leftscreen.jpg" alt="">
+    </div>
+    <div class="buttons">
+        <button id="start" onclick="start()">START</button>
+        <a id="exit" href="./homepage">EXIT</a>
+    </div>
+
+    <script src="./scripts/tictactoe.js"></script>
+</body>
+</html>

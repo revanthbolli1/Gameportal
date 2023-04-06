@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-CJ8DjKX9vijLLt3eBt2Gd+EgOdTtCvz0ZsRgiZPb8+vx9XZvAaOJ7x+c0TR8Ww7LOjvJr/aEL7CC91+nwn/VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://kit.fontawesome.com/9bb6241c8c.js" defer crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./styles/memorygame.css">
+    <link rel="stylesheet" href="./styles/navgame.css">
+    <link rel="shortcut icon" href="./images/title.png" type="image/icon">
+    <script src="./scripts/memorygame.js" defer></script>
+    <title>Memory Game</title>
+</head>
+<body>
+    <div id="navbar">
+        <nav>
+            <i class="fa-solid fa-gamepad"></i>
+            <h2>Gamezone</h2>
+            <div class="dropdown">
+                <img class="profile-icon" src="./images/profile.png" onclick="toggleDropdown()">
+                <div class="arrow" id="arrow-up"></div>
+                <div class="dropdown-content" id="myDropdown">
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+
+    <div class="scoreboard">
+        <h3>SCORE: <span id="result"></span></h3>
+        <h3>ATTEMPTS: <span id="attempts"></span></h3>
+        {{!-- <h3>HIGHSCORE: <span id="highscore"></span></h3> --}}
+    </div>
+
+    <div class="instructions">
+        <h2>Instructions</h2>
+        <p>You have 9 attempts to match all cards.</p>
+        <ul>
+          <li>Click on a card to reveal it.</li>
+          <li>Click on another card to reveal it.</li>
+          <li>If the cards match, a tick mark appears on both.</li>
+          <li>If they don't match, they are flipped back over.</li>
+          <li>Remember the positions of the cards to make matches easier.</li>
+          <li>The game ends when all attempts are used.</li>
+          <li>Your score is based on the number of pairs matched.</li>
+        </ul>
+        <p>View your score and high score at any time.</p>
+        <p>Click start to begin the game.</p>
+    </div>      
+
+    
+    <div id="grid"></div>
+
+    <div id="screen1">
+        <img src="./images/leftscreen.jpg" alt="">
+    </div>
+    <div id="screen2">
+        <img src="./images/leftscreen.jpg" alt="">
+    </div>
+    <div class="buttons">
+        <button id="start" onclick="start()">START</button>
+        <a id="exit" href="./homepage">EXIT</a>
+    </div>
+</body>
+</html>

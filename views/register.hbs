@@ -18,7 +18,7 @@
             <i class="fa-solid fa-gamepad"></i>
             <h2>Gamezone</h2>
             <ul>
-                <li><a href="./login">Login</a></li>
+                <li><a href="/login">Login</a></li>
             </ul>
         </nav>
     </div>
@@ -26,29 +26,72 @@
     <section>
         <div class="register">
             <h2>Register</h2>
-            <form action="/register/register" method="POST">
+            <form action="/register" method="POST">
                 <div class="control">
-                    <input class="input" type="text" placeholder="Player Name" name="playername">
+                    <input class="input" type="text" placeholder="Player Name*" name="playername">
                     <span class="error"></span>
                 </div>
                 <div class="control">
-                    <input class="input" type="text" placeholder="Email" name="email">
+                    <input class="input" type="text" placeholder="Email*" name="email">
                     <span class="error"></span>
                 </div>
                 <div class="control">
-                    <input class="input" type="password" placeholder="Password" name="password">
+                    <input class="input" type="password" placeholder="Password*" name="password">
                     <span class="error"></span>
                 </div>
                 <div class="control">
-                    <input class="input" type="password" placeholder="Confirm Password" name="cpassword">
+                    <input class="input" type="password" placeholder="Confirm Password*" name="cpassword">
                     <span class="error"></span>
                 </div>
                 <button type="submit">Register</button>
+                <span class="message">{{msg}}</span>
             </form>
             <p>Already have an account?<a href="./login"> Login</a></p>
         </div>
     </section>
+    <script>
+    if (data.message==="Signup successfully") {
+      // if signup was successful, redirect to login page
+      window.location.href = 'http://localhost:8000/login';
+    } 
 
-    
+function handleFormSubmit(event) {
+    event.preventDefault(); // prevent the form from submitting
+    // get the form data
+    const formData = new FormData(event.target);
+    const playerName = formData.get('playername');
+    const email = formData.get('email');
+    const password = formData.get('password');
+    const cpassword = formData.get('cpassword');
+    if(password!== cpassword)
+    alert("password doesnot match")
+    let input= {"playerName":playerName, "email":email, "password":password}
+    // print the form data to the console
+    console.log('Player Name:', playerName);
+    console.log('Email:', email);
+    console.log('Password:', password);
+    console.log('Confirm Password:', cpassword);
+    console.log(formData)
+    // make a fetch request to the backend with the form data
+    console.log(input)
+    fetch('/register', {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json'
+    },
+      body: JSON.stringify(input)
+    })
+    .then(response => response.json())
+.then(data => { alert(data.message)
+if (data.message==="Signup successfully") {
+      // if signup was successful, redirect to login page
+      window.location.href = 'http://localhost:8000/login';
+    } })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+   </script> 
 </body>
 </html>
