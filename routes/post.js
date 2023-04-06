@@ -98,114 +98,6 @@ router.post("/login", async (req, res) => {
 });
 
 
-//memorygame
-router.post("/game", checkingToken, async (req, res) => {
-  console.log("game post route called");
-  try {
-    let value;
-    const { score } = req.body;
-    console.log("score" + score);
-    let user = req.cookies.user;
-    let userid = user._id;
-    console.log("id" + userid);
-    let gameid;
-    let formattedDate = moment(Date.now()).format("MMM D, YYYY, h:mm:ss a");
-
-    // Find the game data
-    let gameData = await game.findOne({ GameName: "memorygame" });
-
-    // If there is no game data, create a new game
-    if (!gameData) {
-      let gameName = "memorygame";
-      let gameType = "scorebased";
-      const newGame = new game({
-        GameName: gameName,
-        GameType: gameType,
-        LastUpdated: formattedDate,
-      });
-      const savedGame = await newGame.save();
-
-      // Store the first game ID in the variable
-      gameid = savedGame._id;
-      console.log("First game ID:", gameid);
-      
-    }
-    // Get the game ID
-    else {
-      gameid = gameData._id;
-    }
-    const userGameData = new UGame({
-      UserId: userid,
-      GameId: gameid,
-      PlayedAt: formattedDate,
-      Score: score,
-    });
-
-    // Save the user game record to the database
-    await userGameData.save();
-  } 
-  catch (err) {
-    return console.log("ERROR" + err);
-  }
-});
-
-//tictactoe game
-router.post("/tictactoe", checkingToken, async (req, res) => {
-  console.log("tictactoe post route called");
-  try {
-    let status;
-    const { result } = req.body;
-    console.log(result);
-    if (result === `You won!`) {
-      status = "W";
-    } else if (result === `You Lose!`) {
-      status = "L";
-    } else {
-      status = "D";
-    }
-
-    // Access user information from the cookie user
-    let user = req.cookies.user;
-    let userid = user._id;
-    let gameid;
-    let formattedDate = moment(Date.now()).format("MMM D, YYYY, h:mm:ss a");
-
-    // Find the game data
-    let gameData = await game.findOne({ GameName: "tictactoe" });
-
-    // If there is no game data, create a new game
-    if (!gameData) {
-      let gameName = "tictactoe";
-      let gameType = "WinORLose";
-      const newGame = new game({
-        GameName: gameName,
-        GameType: gameType,
-        LastUpdated: formattedDate,
-      });
-      const savedGame = await newGame.save();
-
-      // Store the first game ID in the variable
-      gameid = savedGame._id;
-      console.log("First game ID:", gameid);
-    }
-    // Get the game ID
-    else {
-      gameid = gameData._id;
-    }
-    const userGameData = new UGame({
-      UserId: userid,
-      GameId: gameid,
-      PlayedAt: formattedDate,
-      Status: status,
-    });
-
-    // Save the user game record to the database
-    await userGameData.save();
-  } 
-  catch (err) {
-    return console.log("ERROR" + err);
-  }
-});
 
 //forgot-password
 router.post("/forgot-password", async (req, res, next) => {
@@ -292,5 +184,117 @@ router.post("/reset-password/:id/:token", async (req, res, next) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
+
+//memorygame
+router.post("/game", checkingToken, async (req, res) => {
+  console.log("game post route called");
+  try {
+    let value;
+    const { score } = req.body;
+    console.log("score" + score);
+    let user = req.cookies.user;
+    let userid = user._id;
+    console.log("id" + userid);
+    let gameid;
+    let formattedDate = moment(Date.now()).format("MMM D, YYYY, h:mm:ss a");
+
+    // Find the game data
+    let gameData = await game.findOne({ GameName: "memorygame" });
+
+    // If there is no game data, create a new game
+    if (!gameData) {
+      let gameName = "memorygame";
+      let gameType = "scorebased";
+      const newGame = new game({
+        GameName: gameName,
+        GameType: gameType,
+        LastUpdated: formattedDate,
+      });
+      const savedGame = await newGame.save();
+
+      // Store the first game ID in the variable
+      gameid = savedGame._id;
+      console.log("First game ID:", gameid);
+      
+    }
+    // Get the game ID
+    else {
+      gameid = gameData._id;
+    }
+    const userGameData = new UGame({
+      UserId: userid,
+      GameId: gameid,
+      PlayedAt: formattedDate,
+      Score: score,
+    });
+
+    // Save the user game record to the database
+    await userGameData.save();
+  } 
+  catch (err) {
+    return console.log("ERROR" + err);
+  }
+});
+
+
+//tictactoe game
+router.post("/tictactoe", checkingToken, async (req, res) => {
+  console.log("tictactoe post route called");
+  try {
+    let status;
+    const { result } = req.body;
+    console.log(result);
+    if (result === `You won!`) {
+      status = "W";
+    } else if (result === `You Lose!`) {
+      status = "L";
+    } else {
+      status = "D";
+    }
+
+    // Access user information from the cookie user
+    let user = req.cookies.user;
+    let userid = user._id;
+    let gameid;
+    let formattedDate = moment(Date.now()).format("MMM D, YYYY, h:mm:ss a");
+
+    // Find the game data
+    let gameData = await game.findOne({ GameName: "tictactoe" });
+
+    // If there is no game data, create a new game
+    if (!gameData) {
+      let gameName = "tictactoe";
+      let gameType = "WinORLose";
+      const newGame = new game({
+        GameName: gameName,
+        GameType: gameType,
+        LastUpdated: formattedDate,
+      });
+      const savedGame = await newGame.save();
+
+      // Store the first game ID in the variable
+      gameid = savedGame._id;
+      console.log("First game ID:", gameid);
+    }
+    // Get the game ID
+    else {
+      gameid = gameData._id;
+    }
+    const userGameData = new UGame({
+      UserId: userid,
+      GameId: gameid,
+      PlayedAt: formattedDate,
+      Status: status,
+    });
+
+    // Save the user game record to the database
+    await userGameData.save();
+  } 
+  catch (err) {
+    return console.log("ERROR" + err);
+  }
+});
+
+
 
 module.exports = router;
