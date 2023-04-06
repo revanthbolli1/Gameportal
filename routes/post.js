@@ -3,11 +3,6 @@ const router=express.Router();
 const jwt= require('jsonwebtoken');
 const mongoose=require('mongoose');
 const nodemailer=require('nodemailer');
-
-const User=require('../api/models/registerSchema');
-const UGame=require('../api/models/userGameschema');
-const game=require('../api/models/game_schema');
-//const game2=require('../api/models/game2_schema');
 const bcrypt = require("bcryptjs")
 const {createToken,checkingToken}=require('../auth');
 const cookieParser=require('cookie-parser');
@@ -15,20 +10,19 @@ router.use(cookieParser());
 const {check,checkMem,checkTic}=require('../highScore');
 const moment=require('moment');
 const session=require('session');
-var cnt=0;
 
-//const {value,userdata}=require('../tokenFunc');
-var userdata;
+const User=require('../api/models/registerSchema');
+const UGame=require('../api/models/userGameschema');
+const game=require('../api/models/game_schema');
 
-
-
+//database connection
 const db=mongoose.connection;
 
 //create jwt secret --- hardcoding jwt secret here insted of creating .env file
 //const JWT_SECRET = 'some super secret..'
 
 
-
+//register
 router.post('/register', async (req, res) => {
   console.log('post method called');
   try {
@@ -87,29 +81,19 @@ router.post('/login', async(req,res)=>
     if (result === false) {
        return  res.status(400).send({ message: "Invalid password" })
     }
-  
-
     
-     
     res.cookie('user', user, { httpOnly: true, secure: true, maxAge: 3600000 });
     const token = createToken(user);
     console.log(token);
     res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 3600000 });
     
-    return  res.redirect('/homepage');
-  
-   
+    return  res.redirect('/homepage');  
   
     } catch (error) {
         console.error(error);
     return res.status(500).json({message:'Internal Server Error'});
         }
 })
-
-
-//To create a new game 
-
-
 
 
 
@@ -120,17 +104,16 @@ router.post('/game',checkingToken,async(req,res)=>{
     let value;
     const {  score } = req.body;
     console.log("score"+score);
-    //let highscore=check(score);
-    //console.log(highscore);
-   // Access user information from the cookie user
-   let user = req.cookies.user;
-   let userid=user._id;
-   console.log("id"+userid);
-  
-    let gameid;
-    let formattedDate=moment(Date.now()).format('MMM D, YYYY, h:mm:ss a')
+     // Access user information from the cookie user
+     let user = req.cookies.user;
+     let userid=user._id;
+     console.log("id"+userid);
+     let gameid;
+     let formattedDate=moment(Date.now()).format('MMM D, YYYY, h:mm:ss a')
+   
     // Find the game data
     let gameData = await game.findOne({ GameName: "memorygame" });
+    
     // If there is no game data, create a new game
     if (!gameData) {
       let gameName = 'memorygame'
@@ -141,10 +124,10 @@ router.post('/game',checkingToken,async(req,res)=>{
         LastUpdated: formattedDate
       });
       const savedGame = await newGame.save();
+      
       // Store the first game ID in the variable
       gameid= savedGame._id;
       console.log('First game ID:',gameid);
-      //gameData = savedGame;
     }
     // Get the game ID
     else{
@@ -156,9 +139,9 @@ router.post('/game',checkingToken,async(req,res)=>{
       PlayedAt: formattedDate,
       Score: score
     });
+    
     // Save the user game record to the database
     await userGameData.save();
-    
   }
   catch(err){
     return console.log('ERROR'+err);
@@ -185,11 +168,12 @@ router.post('/tictactoe',checkingToken,async(req,res)=>{
   // Access user information from the cookie user
   let user = req.cookies.user;
   let userid=user._id;
-  // let gameName='tictactoe';
-   let gameid;
-   let formattedDate=moment(Date.now()).format('MMM D, YYYY, h:mm:ss a')
+  let gameid;
+  let formattedDate=moment(Date.now()).format('MMM D, YYYY, h:mm:ss a')
+  
    // Find the game data
    let gameData = await game.findOne({ GameName: "tictactoe" });
+   
    // If there is no game data, create a new game
    if (!gameData) {
      let gameName = 'tictactoe'
@@ -203,8 +187,7 @@ router.post('/tictactoe',checkingToken,async(req,res)=>{
      // Store the first game ID in the variable
      gameid= savedGame._id;
      console.log('First game ID:',gameid);
-     //gameData = savedGame;
-   }
+    }
    // Get the game ID
    else{
     gameid = gameData._id;
@@ -217,7 +200,6 @@ router.post('/tictactoe',checkingToken,async(req,res)=>{
    });
    // Save the user game record to the database
    await userGameData.save();
-   
   }
   catch(err){
     return console.log('ERROR'+err);
@@ -225,6 +207,7 @@ router.post('/tictactoe',checkingToken,async(req,res)=>{
 });
 
 
+//forgot-password
 router.post("/forgot-password", async (req, res, next) => {
   const { email } = req.body;
   try {
@@ -278,6 +261,8 @@ router.post("/forgot-password", async (req, res, next) => {
     res.send(err.message);
   }
 });
+
+
 //reset-password
 router.post("/reset-password/:id/:token",async (req, res, next) => {
   try {
@@ -289,10 +274,7 @@ router.post("/reset-password/:id/:token",async (req, res, next) => {
     }
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     const email = payload.email;
-     const user = await User.findOne({ _id: id, email: email });
-    // if (!user) {
-    //   return res.render('forgot-password',{ msg: "Invalid reset link" });
-    // }
+    const user = await User.findOne({ _id: id, email: email });
     const now = Math.floor(Date.now() / 1000); // get current time in seconds
     if (payload.exp && now > payload.exp) {
       return res.render('forgot-password',{ msg: "Reset link has expired" });
@@ -301,11 +283,8 @@ router.post("/reset-password/:id/:token",async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     user.password = hashedPassword;
     await user.save();
-
     res.redirect('/login');
-    //return res.send({ message: "Password updated successfully" });
   } catch (err) {
-    //console.log(err);
     return res.status(500).json({ message: "Internal server error" });
   }
 });
