@@ -60,7 +60,19 @@ router.get('/login', (req, res) => {
   res.render('login'); //call login page
 });
 
-     
+//home-page
+router.get('/homepage',checkingToken,(req,res)=>{
+ return  res.render('homepage');
+})
+
+//logout
+router.get('/logout', (req, res) => {
+  res.cookie('token', '', { maxAge: 0 });
+  res.cookie('user', '', { maxAge: 0 });
+ //res.clearCookie('cook');
+ res.redirect('/login'); // Redirect the user to the login page after logout
+
+});
 
 // forgot-password
 router.get('/forgot-password', (req, res, next) => {
@@ -100,10 +112,9 @@ router.get("/reset-password/:id/:token", async (req, res, next) => {
 
 
 //memorygame
-router.get("/memorygame", (req, res) => {
-  res.render("memorygame");
-});
-
+router.get('/memorygame',checkingToken,(req,res)=>{
+  res.render('memorygame');
+})
 // tictactoe
 router.get('/tictactoe', checkingToken,async (req, res) => {
   res.render('tictactoe');
