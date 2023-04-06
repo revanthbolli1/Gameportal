@@ -56,6 +56,13 @@ app.use('/', getLogin)
 const postLogin= require('./routes/post')
 app.use('/', postLogin)
 
+//homepage
+const get_home= require('../homepage')
+app.use('/', get_home)
+
+//logout
+const get_logout= require('./routes/get')
+app.use('/', get_logout)
 
 //forgot-password
 const frgt_pwd= require('./routes/get')
@@ -98,7 +105,7 @@ const deleteRouter= require('./routes/delete')
 app.use('/delete', deleteRouter)
 
 
-//server
+//server calls
 const port=8000
 app.listen(port, ()=>
 {
