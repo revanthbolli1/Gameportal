@@ -5,6 +5,7 @@ const bodyParser=require('body-parser');
 const session=require('express-session');
 const path=require('path');
 require('dotenv').config();
+
 const postRouter=require('./routes/post');
 const getRouter=require('./routes/get');
 const game=require('./api/models/game_schema');
@@ -14,6 +15,7 @@ const {checkingToken}=require('./auth');
 const cookieParser=require('cookie-parser');
 const {value,token1}=require('./tokenFunc');
 
+//app started
 const app=express();
 app.use(cookieParser());
 
@@ -27,11 +29,11 @@ db.on('error',()=>{
 })
 db.once('open',()=>console.log("Connected to database"));
 
-
+//path
 app.set('view engine', 'hbs')
 app.set('views', path.join(__dirname, 'views'))
 
-
+//middleware for parsing JSON 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
@@ -75,43 +77,28 @@ app.use('/', get_dashb)
 const post_dashb= require('./routes/post')
 app.use('/', post_dashb)
 
-app.get('/homepage',checkingToken,(req,res)=>{
- return  res.render('homepage');
-})
+//homepage
+const get_home= require('../homepage')
+app.use('/', get_home)
 
-app.get('/logout', (req, res) => {
-  res.cookie('token', '', { maxAge: 0 });
-  res.cookie('user', '', { maxAge: 0 });
- //res.clearCookie('cook');
- res.redirect('/login'); // Redirect the user to the login page after logout
-
-});
-
-//memorygame
-// const get_memgame= require('./routes/get')
-// app.use('/', get_memgame)
-
-// const post_memgame= require('./routes/post')
-// app.use('/', post_memgame)
+//logout
+const get_logout= require('./routes/get')
+app.use('/', get_logout)
 
 
+//register
 app.get('/register',(req,res)=>{
   res.render('register');
 })
 
-
-
+//memorygame
 app.get('/game',checkingToken,(req,res)=>{
   res.render('memorygame');
 })
 
-
-
 app.use('/users',getRouter);
 
-
-
-
+//server call
 app.listen(8080,()=>{
   console.log("connected to server at port 8080");
 })
