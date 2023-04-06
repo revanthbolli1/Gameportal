@@ -1,3 +1,4 @@
+const form = document.querySelector("form");
 const emailInput = document.getElementById("email");
 const emailError = document.getElementById("email-error");
 const resetButton = document.querySelector('input[type="submit"]');
@@ -23,10 +24,17 @@ function showError() {
   emailError.className = "error-message active";
 }
 
-resetButton.addEventListener("click", function (event) {
+form.addEventListener("submit", function (event) {
   event.preventDefault();
-  successMessage.textContent = "A reset password link has been sent to your registered mail!";
-  emailInput.remove();
-  resetButton.remove();
-  document.querySelector('label[for="email"]').remove();
+  if (emailInput.validity.valid) {
+    successMessage.textContent = "A reset password email has been sent to your email address.";
+    emailInput.remove();
+    resetButton.remove();
+    document.querySelector('label[for="email"]').remove();
+    form.submit();
+  } else {
+    showError();
+    resetButton.disabled = true;
+  }
 });
+
